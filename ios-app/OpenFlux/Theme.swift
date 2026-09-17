@@ -42,17 +42,19 @@ private extension UIColor {
 }
 
 extension Font {
-    /// UI text. Stands in for the reference's "Instrument Sans" — no custom
-    /// font files bundled in this pass, swap in a real font later if wanted
+    /// UI text at a standard system text style (`.body`, `.subheadline`,
+    /// `.footnote`, …) — same sizes iOS itself uses everywhere else, and
+    /// they scale with the user's Dynamic Type setting. Stands in for the
+    /// reference's "Instrument Sans"; swap in a real font later if wanted
     /// (add the .ttf to Assets, register it in Info.plist under
     /// UIAppFonts, then replace `.system` here with `.custom`).
-    static func ui(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight)
+    static func ui(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
+        .system(style, design: .default).weight(weight)
     }
-    /// Monospaced text (log, addresses, technical values). Stands in for
-    /// the reference's "IBM Plex Mono" using the system's built-in
-    /// monospaced design — no extra font asset needed.
-    static func mono(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .monospaced)
+    /// Monospaced text (log, addresses, technical values) at a standard
+    /// system text style — same size scale as `ui`, just the built-in
+    /// monospaced design instead of the reference's "IBM Plex Mono".
+    static func mono(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
+        .system(style, design: .monospaced).weight(weight)
     }
 }

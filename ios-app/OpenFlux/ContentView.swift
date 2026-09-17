@@ -103,7 +103,7 @@ struct ContentView: View {
             Button { showSettings = true } label: { iconBox(systemName: "gearshape.fill") }
                 .accessibilityLabel("Настройки подключения")
             Spacer()
-            Text("OpenFlux").font(.ui(15, weight: .semibold)).foregroundColor(Theme.ink)
+            Text("OpenFlux").font(.ui(.headline, weight: .semibold)).foregroundColor(Theme.ink)
             Spacer()
             Button { editTarget = nil; showAddEdit = true } label: {
                 iconBox(systemName: "plus", accent: true)
@@ -157,7 +157,7 @@ struct ContentView: View {
 
             HStack(spacing: 7) {
                 Circle().fill(dotColor).frame(width: 8, height: 8)
-                Text(statusRu(vpn.status)).font(.ui(15, weight: .semibold)).foregroundColor(Theme.ink)
+                Text(statusRu(vpn.status)).font(.ui(.headline, weight: .semibold)).foregroundColor(Theme.ink)
             }
 
             profileSwitcherTrigger
@@ -214,11 +214,11 @@ struct ContentView: View {
             HStack(spacing: 10) {
                 avatarChip(active)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(active.title).font(.ui(13.5, weight: .semibold)).foregroundColor(Theme.ink)
+                    Text(active.title).font(.ui(.subheadline, weight: .semibold)).foregroundColor(Theme.ink)
                     HStack(spacing: 5) {
                         Circle().fill(vpn.active ? Theme.success : Theme.inkFaint).frame(width: 6, height: 6)
                         Text(summary(active) + (vpn.active ? " · подключено" : ""))
-                            .font(.mono(11)).foregroundColor(Theme.inkMuted).lineLimit(1)
+                            .font(.mono(.footnote)).foregroundColor(Theme.inkMuted).lineLimit(1)
                     }
                 }
                 Spacer()
@@ -238,7 +238,7 @@ struct ContentView: View {
 
     private func avatarChip(_ kind: TransportKind) -> some View {
         Text(initials(for: kind))
-            .font(.mono(12, weight: .semibold))
+            .font(.mono(.footnote, weight: .semibold))
             .foregroundColor(Theme.ink)
             .frame(width: 32, height: 32)
             .background(Theme.surface2)
@@ -254,7 +254,7 @@ struct ContentView: View {
                     Image(systemName: "wifi")
                     Text("Проверить доступность")
                 }
-                .font(.ui(13, weight: .semibold))
+                .font(.ui(.subheadline, weight: .semibold))
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 10)
             }
@@ -267,7 +267,7 @@ struct ContentView: View {
             if availState != .idle {
                 HStack(spacing: 7) {
                     if availState == .pending { ProgressView().scaleEffect(0.7) }
-                    Text(availMessage).font(.mono(11.5))
+                    Text(availMessage).font(.mono(.footnote))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(8)
@@ -338,7 +338,7 @@ struct ContentView: View {
                         VStack(alignment: .leading, spacing: 5) {
                             ForEach(logs) { line in
                                 (Text(line.time).bold() + Text(" " + line.text))
-                                    .font(.mono(10.8))
+                                    .font(.mono(.footnote))
                                     .foregroundColor(logColor(line.kind))
                             }
                             .id("logbottom")
@@ -361,11 +361,11 @@ struct ContentView: View {
                     Image(systemName: "chevron.down")
                         .rotationEffect(.degrees(consoleOpen ? 180 : 0))
                         .font(.system(size: 12, weight: .semibold))
-                    Text("Лог").font(.ui(11.5, weight: .semibold))
+                    Text("Лог").font(.ui(.footnote, weight: .semibold))
                     Text(logs.last?.text ?? "приложение готово")
-                        .font(.mono(11)).lineLimit(1).truncationMode(.tail)
+                        .font(.mono(.footnote)).lineLimit(1).truncationMode(.tail)
                     Spacer()
-                    Text("подробно").font(.ui(10.5)).foregroundColor(Theme.inkMuted)
+                    Text("подробно").font(.ui(.caption)).foregroundColor(Theme.inkMuted)
                     Toggle("", isOn: $verbose)
                         .labelsHidden()
                         .toggleStyle(SwitchToggleStyle(tint: Theme.accent))
@@ -437,7 +437,7 @@ struct ContentView: View {
                         TextField("1.1.1.1@cloudflare-dns.com", text: $dnsCustom)
                             .textInputAutocapitalization(.never)
                             .autocorrectionDisabled(true)
-                            .font(.mono(13))
+                            .font(.mono(.body))
                     }
                     Toggle("Туннелировать UDP / QUIC", isOn: $tunnelUDP)
                     Text("Выкл — QUIC идёт через TCP (работает везде). Вкл — нужен узел с поддержкой UDP.")
@@ -469,7 +469,7 @@ struct ContentView: View {
         // its rows, which stood out against the rest of the themed UI.
         VStack(spacing: 0) {
             Text("Профили")
-                .font(.ui(15, weight: .semibold))
+                .font(.ui(.headline, weight: .semibold))
                 .foregroundColor(Theme.ink)
                 .padding(.top, 18)
                 .padding(.bottom, 12)
@@ -489,8 +489,8 @@ struct ContentView: View {
                                 HStack(spacing: 10) {
                                     avatarChip(kind)
                                     VStack(alignment: .leading, spacing: 2) {
-                                        Text(kind.title).font(.ui(13.5, weight: .semibold)).foregroundColor(Theme.ink)
-                                        Text(summary(kind)).font(.mono(10.5)).foregroundColor(Theme.inkMuted)
+                                        Text(kind.title).font(.ui(.subheadline, weight: .semibold)).foregroundColor(Theme.ink)
+                                        Text(summary(kind)).font(.mono(.footnote)).foregroundColor(Theme.inkMuted)
                                     }
                                     Spacer(minLength: 0)
                                 }
@@ -562,17 +562,17 @@ struct ContentView: View {
                     Section {
                         TextField("auth token", text: $addToken)
                             .textInputAutocapitalization(.never).autocorrectionDisabled(true)
-                            .font(.mono(13))
+                            .font(.mono(.body))
                         TextField("numeric id", text: $addUserId)
                             .keyboardType(.numberPad)
-                            .font(.mono(13))
+                            .font(.mono(.body))
                     }
                 } else {
                     Section {
                         TextField("https://…", text: $addLinkInput)
                             .textInputAutocapitalization(.never).autocorrectionDisabled(true)
                             .keyboardType(.URL)
-                            .font(.mono(13))
+                            .font(.mono(.body))
                         Button {
                             addLinkInput = UIPasteboard.general.string ?? addLinkInput
                         } label: {
@@ -583,7 +583,7 @@ struct ContentView: View {
                         Section {
                             TextField("второй документ (опционально)", text: $addLinkInput2)
                                 .textInputAutocapitalization(.never).autocorrectionDisabled(true)
-                                .font(.mono(13))
+                                .font(.mono(.body))
                             Text("Два документа работают параллельно для скорости и отказоустойчивости. Exit-node должен обслуживать оба.")
                                 .font(.caption).foregroundColor(.secondary)
                         }
@@ -601,7 +601,7 @@ struct ContentView: View {
                     Section {
                         HStack(spacing: 7) {
                             if addTestState == .pending { ProgressView().scaleEffect(0.7) }
-                            Text(addTestMessage).font(.mono(11.5))
+                            Text(addTestMessage).font(.mono(.footnote))
                         }
                     }
                 }

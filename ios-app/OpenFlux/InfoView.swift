@@ -14,23 +14,23 @@ struct InfoView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("OpenFlux").font(.ui(22, weight: .heavy)).foregroundColor(Theme.ink)
+                        Text("OpenFlux").font(.ui(.title2, weight: .heavy)).foregroundColor(Theme.ink)
                         Text("TCP-туннель через скрытый транспорт. Клиент поднимает локальный SOCKS5 и системный VPN, трафик идёт через exit-node.")
-                            .font(.ui(13)).foregroundColor(Theme.inkMuted)
+                            .font(.ui(.footnote)).foregroundColor(Theme.inkMuted)
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Поддержать разработку 🖤")
-                            .font(.ui(14, weight: .bold)).foregroundColor(Theme.ink)
+                            .font(.ui(.subheadline, weight: .bold)).foregroundColor(Theme.ink)
                         Text("Нажми на адрес, чтобы скопировать.")
-                            .font(.ui(11.5)).foregroundColor(Theme.inkMuted)
+                            .font(.ui(.caption)).foregroundColor(Theme.inkMuted)
 
                         donationRow(title: "Solana (SOL)", address: sol)
                         donationRow(title: "Ethereum (ETH)", address: eth)
 
                         if let c = copied {
                             Label("\(c) скопирован", systemImage: "checkmark.circle.fill")
-                                .font(.ui(12)).foregroundColor(Theme.success)
+                                .font(.ui(.caption)).foregroundColor(Theme.success)
                         }
                     }
                     .padding(14)
@@ -60,12 +60,12 @@ struct InfoView: View {
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text(title).font(.ui(13, weight: .semibold)).foregroundColor(Theme.ink)
+                    Text(title).font(.ui(.subheadline, weight: .semibold)).foregroundColor(Theme.ink)
                     Spacer()
                     Image(systemName: "doc.on.doc").font(.caption).foregroundColor(Theme.inkMuted)
                 }
                 Text(address)
-                    .font(.mono(11))
+                    .font(.mono(.footnote))
                     .foregroundColor(Theme.inkMuted)
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)
