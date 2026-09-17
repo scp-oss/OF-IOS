@@ -463,46 +463,65 @@ struct ContentView: View {
     // MARK: - Profile switcher sheet
 
     private var profileSwitcherSheet: some View {
-        NavigationView {
-            List {
-                ForEach(TransportKind.allCases) { kind in
-                    // Two SIBLING buttons, not one nested inside the other's
-                    // label — nested Buttons inside a List row don't reliably
-                    // receive independent taps in SwiftUI.
-                    HStack(spacing: 10) {
-                        Button {
-                            activeRaw = kind.rawValue
-                            showProfileSwitcher = false
-                            appendLog("выбран профиль: \(kind.title)")
-                        } label: {
-                            HStack(spacing: 10) {
-                                avatarChip(kind)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(kind.title).font(.ui(13, weight: .semibold)).foregroundColor(Theme.ink)
-                                    Text(summary(kind)).font(.mono(10.5)).foregroundColor(Theme.inkMuted)
-                                }
-                                Spacer(minLength: 0)
-                            }
-                        }
-                        .buttonStyle(.plain)
+        // Hand-rolled rows (matching the card style used everywhere else in
+        // this screen) instead of a system List — a plain List keeps its own
+        // white background/system row chrome no matter what colors you feed
+        // its rows, which stood out against the rest of the themed UI.
+        VStack(spacing: 0) {
+            Text("Профили")
+                .font(.ui(15, weight: .semibold))
+                .foregroundColor(Theme.ink)
+                .padding(.top, 18)
+                .padding(.bottom, 12)
 
-                        Button {
-                            editTarget = kind
-                            showProfileSwitcher = false
-                            showAddEdit = true
-                        } label: {
-                            Image(systemName: "pencil").foregroundColor(Theme.inkMuted)
+            ScrollView {
+                VStack(spacing: 10) {
+                    ForEach(TransportKind.allCases) { kind in
+                        // Two SIBLING buttons, not one nested inside the
+                        // other's label — nested Buttons inside the same row
+                        // don't reliably receive independent taps in SwiftUI.
+                        HStack(spacing: 10) {
+                            Button {
+                                activeRaw = kind.rawValue
+                                showProfileSwitcher = false
+                                appendLog("выбран профиль: \(kind.title)")
+                            } label: {
+                                HStack(spacing: 10) {
+                                    avatarChip(kind)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(kind.title).font(.ui(13.5, weight: .semibold)).foregroundColor(Theme.ink)
+                                        Text(summary(kind)).font(.mono(10.5)).foregroundColor(Theme.inkMuted)
+                                    }
+                                    Spacer(minLength: 0)
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            Button {
+                                editTarget = kind
+                                showProfileSwitcher = false
+                                showAddEdit = true
+                            } label: {
+                                Image(systemName: "pencil")
+                                    .foregroundColor(Theme.inkMuted)
+                                    .frame(width: 28, height: 28)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
+                        .background(kind == active ? Theme.accentWash : Theme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.border))
                     }
-                    .listRowBackground(kind == active ? Theme.accentWash : Theme.surface)
                 }
+                .padding(.horizontal, 18)
+                .padding(.bottom, 18)
             }
-            .listStyle(.plain)
-            .navigationTitle("Профили")
-            .navigationBarTitleDisplayMode(.inline)
         }
-        .presentationDetents([.height(320), .medium])
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.ground)
+        .presentationDetents([.height(360), .medium])
         .presentationDragIndicator(.visible)
     }
 
