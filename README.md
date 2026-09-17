@@ -46,7 +46,7 @@ unused, so it can be wired back in as an advanced option later).
 export XCODE_PATH="<your Xcode.app path>"   # optional, defaults to /Applications/Xcode.app
 ./fetch_backend.sh                          # clones upstream @ pinned commit, builds liboflux.a
 cd ios-app
-xcodegen generate                           # brew install xcodegen if you don't have it
+xcodegen generate                           # brew install xcodegen if you don't have it — full project (with VPN)
 open OpenFlux.xcodeproj                      # or xcodebuild ...
 ```
 
@@ -54,11 +54,36 @@ open OpenFlux.xcodeproj                      # or xcodebuild ...
 (`8GQH8GQ252`) and bundle id — change `DEVELOPMENT_TEAM` /
 `PRODUCT_BUNDLE_IDENTIFIER` before archiving under your own account.
 
-Note: the system VPN (packet-tunnel extension) needs the Network Extension
-entitlement, which requires a **paid** Apple Developer Program account — a
-free personal team can't get it. It also doesn't run in the iOS Simulator,
-only on a physical device. The main-screen UI and the availability check
-work fine in the Simulator without either.
+**The Simulator does not work for this app at all, in either build below** —
+`build_ios.sh` compiles `liboflux.a` against the `iPhoneOS` SDK only
+(device, arm64). It's not a signing/entitlement issue, the library itself
+has no Simulator-compatible slice, so *any* target that links it (including
+the plain main app, for its own `TunnelController` calls) fails to link on
+a Simulator destination. A real iPhone is required for any build here.
+
+### Two build variants
+
+- **`project.yml`** (default) — the full app, with the `OpenFluxTunnel`
+  Network Extension target and the system VPN. Needs a **paid** Apple
+  Developer Program account to sign — a free personal team cannot get the
+  Network Extension entitlement at all, on either target.
+- **`project.preview.yml`** — same UI, but with the `OpenFluxTunnel` target
+  and its entitlement removed entirely, so it signs and installs on a real
+  iPhone with a **free** personal-team Apple ID. Everything except the
+  actual VPN works (profile switcher, settings/add-edit sheets, log,
+  "Проверить доступность"); tapping "Start VPN" just shows an on-screen
+  error, since there's no extension for it to talk to — expected, not a
+  bug. Use this to review the interface before a paid account is available:
+  ```bash
+  cd ios-app
+  xcodegen generate --spec project.preview.yml
+  open OpenFlux.xcodeproj
+  ```
+  Pick your physical iPhone as the run destination (still not the
+  Simulator — see above), Team = your own free Apple ID.
+
+Whoever has the paid account should just use the default `project.yml` —
+nothing about that path changes because `project.preview.yml` exists.
 
 ## License
 
