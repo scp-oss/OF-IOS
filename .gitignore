@@ -1,0 +1,9 @@
+.backend-src/
+ios-app/Lib/*.a
+ios-app/Lib/*.h
+ios-app/build/
+ios-app/OpenFlux.xcodeproj/
+ios-app/DerivedData/
+output/
+.DS_Store
+*.p8
