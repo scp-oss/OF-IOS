@@ -24,7 +24,11 @@ git clone "$UPSTREAM_URL" "$WORK"
 git -C "$WORK" checkout "$UPSTREAM_REF"
 
 echo "==> Building liboflux.a (iOS arm64)"
-"$WORK/build_ios.sh"
+# build_ios.sh uses paths relative to its own directory (OUTPUT_DIR=output/ios,
+# `go build .`) — it must run with CWD = the backend checkout, not this repo's
+# root, or `go build` can't find go.mod (and may instead find *this* repo's
+# .git and fail with a confusing "cannot find main module" error).
+( cd "$WORK" && ./build_ios.sh )
 
 echo "==> Copying into ios-app/Lib/"
 mkdir -p "$ROOT/ios-app/Lib"
